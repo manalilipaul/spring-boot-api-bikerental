@@ -3,17 +3,24 @@ pipeline {
 
     triggers {
         pollSCM '* * * * *'
-        sudo chmod +x gradlew
+
     }
     stages {
+        stage('Init') {
+            steps {
+                echo 'Compile project'
+                sh "chmod +x gradlew"
+                sh "./gradlew clean build --no-daemon"
+            }
+        }
         stage('Build') {
             steps {
-                sudo gradlew assemble
+                sh './gradlew assemble'
             }
         }
         stage('Test') {
             steps {
-                sudo gradlew test
+                sh './gradlew test'
             }
         }
 
