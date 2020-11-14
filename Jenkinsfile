@@ -3,17 +3,17 @@ pipeline {
 
     triggers {
         pollSCM '* * * * *'
-        sudo chmod +x ./gradlew
+        sudo chmod +x gradlew
     }
     stages {
         stage('Build') {
             steps {
-                sh './gradlew assemble'
+                sudo gradlew assemble
             }
         }
         stage('Test') {
             steps {
-                sh './gradlew test'
+                sudo gradlew test
             }
         }
 
