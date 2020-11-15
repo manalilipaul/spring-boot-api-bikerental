@@ -38,7 +38,7 @@ pipeline {
         }
         stage('Deploy to AWS') {
             environment {
-                DOCKER_HUB_LOGIN = credentials('docker-hub')
+                DOCKER_HUB_LOGIN = credentials('dockerhub')
             }
             steps {
                 withAWS(credentials: 'aws-credentials', region: env.AWS_REGION) {
