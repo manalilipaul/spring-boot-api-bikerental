@@ -1,11 +1,9 @@
 pipeline {
     agent any
-    environment {
-        registry = "manalilipaul/bikerental"
-        registryCredential = 'dockerhub'
-    }
+
     triggers {
         pollSCM '* * * * *'
+
     }
     stages {
         stage('Init') {
@@ -30,12 +28,13 @@ pipeline {
             }
         }
         stage('Push Docker image') {
-            steps {
-                docker.withRegistry( '', registryCredential ) {
-                    sh './gradlew dockerPush --stacktrace'
-                }
+            environment {
+                DOCKER_HUB_LOGIN = credentials('dockerhub')
             }
-
+            steps {
+                sh 'docker login --username=$DOCKER_HUB_LOGIN_USR --password=$DOCKER_HUB_LOGIN_PSW'
+                sh './gradlew dockerPush --stacktrace'
+            }
         }
     }
 }
