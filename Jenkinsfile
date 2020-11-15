@@ -1,11 +1,11 @@
 pipeline {
     agent any
     environment {
-            registryCredential = 'dockerhub'
+        registry = "manalilipaul/bikerental"
+        registryCredential = 'dockerhub'
     }
     triggers {
         pollSCM '* * * * *'
-
     }
     stages {
         stage('Init') {
