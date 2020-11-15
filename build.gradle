@@ -43,7 +43,7 @@ docker {
 dockerRun {
     name project.name
     image imageName
-    ports '8090:8090'
+    ports '8000:8090'
     clean true
 }
 
