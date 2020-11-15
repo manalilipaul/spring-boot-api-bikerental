@@ -46,14 +46,14 @@ docker {
 dockerRun {
     name project.name
     image imageName
-    ports '8070:8070'
+    ports '8080:8080'
     clean true
 }
 
 import com.amazonaws.services.cloudformation.model.Capability
 
 aws {
-    region = findProperty('region') ?: 'us-east-1'
+    region = findProperty('region') ?: 'ap-southeast-1'
 }
 
 cloudFormation {
