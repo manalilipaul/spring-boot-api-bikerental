@@ -32,7 +32,7 @@ Resources:
       NetworkMode: awsvpc
       ContainerDefinitions:
         - Name: !Sub ${ServiceName}-container
-          Image: !Sub bdocker.io/${DockerHubUsername}/${ServiceName}:${ServiceVersion}
+          Image: !Sub docker.io/${DockerHubUsername}/${ServiceName}:${ServiceVersion}
           PortMappings:
             - ContainerPort: 8080
       RequiresCompatibilities:
