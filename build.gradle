@@ -24,10 +24,16 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-devtools'
     implementation group: 'com.h2database', name: 'h2', version: '1.4.200'
 
+    //implementation 'org.springframework.boot:spring-boot-starter-security'
+
+
+    runtimeOnly 'mysql:mysql-connector-java'
+
     compileOnly 'org.projectlombok:lombok:1.18.12'
     annotationProcessor 'org.projectlombok:lombok:1.18.12'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    //testImplementation 'org.springframework.security:spring-security-test'
 }
 
 test {

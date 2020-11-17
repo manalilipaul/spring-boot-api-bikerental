@@ -38,7 +38,6 @@ public class BikeRentalController {
     public BikeRent updateRent(@RequestBody BikeRent bikeRentPut) {
         BikeRent bikeRent = bikeRentalRepository.findById(bikeRentPut.getBikeid()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Invalid bike id %s", bikeRentPut.getBikeid())));
         bikeRent.setCustomername(bikeRentPut.getCustomername());
-        bikeRent.setCheckin(bikeRentPut.getCheckin());
         bikeRent.setCheckout(bikeRentPut.getCheckout());
         bikeRentalRepository.save(bikeRent);
         return bikeRent;

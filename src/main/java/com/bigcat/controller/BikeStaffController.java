@@ -17,6 +17,12 @@ public class BikeStaffController {
         this.bikeStaffRepository = bikeStaffRepository;
     }
 
+    @GetMapping(value = "/")
+    @ResponseBody
+    public String index(){
+        return "test";
+    }
+
     @GetMapping(value = "/staff", produces = MediaType.APPLICATION_JSON_VALUE)
     public Iterable<BikeStaff> getStaff() {
         return bikeStaffRepository.findAll();

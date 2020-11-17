@@ -38,6 +38,24 @@ Resources:
       RequiresCompatibilities:
         - EC2
         - FARGATE
+  PortalELB:
+    Type: 'AWS::ElasticLoadBalancing::LoadBalancer'
+    Properties:
+      Subnets:
+        - Ref: !Ref SubnetID1
+        - Ref: !Ref SubnetID2
+      Listeners:
+        - LoadBalancerPort: '8080'
+          InstancePort: '8080'
+          Protocol: HTTP
+      HealthCheck:
+        Target: 'HTTP:8080/rent'
+        HealthyThreshold: '3'
+        UnhealthyThreshold: '5'
+        Interval: '30'
+        Timeout: '5'
+      SecurityGroups:
+        - Ref: ServiceSecurityGroup.GroupId
   Service:
     Type: AWS::ECS::Service
     Properties:
@@ -49,7 +67,26 @@ Resources:
       NetworkConfiguration:
         AwsvpcConfiguration:
           AssignPublicIp: ENABLED
-          Subnets:
-            - !Ref SubnetID
           SecurityGroups:
             - !GetAtt ServiceSecurityGroup.GroupId
+    LoadBalancers:
+      - ContainerName: portal-service
+        ContainerPort: 8080
+        LoadBalancerName:
+          Ref: PortalELB
+  Route53:
+    Type: AWS::Route53::RecordSetGroup
+    Properties:
+      HostedZoneName: !Sub ${HostedZone}
+      RecordSets:
+        - Name:
+            Fn::Join:
+              - ''
+              - - "backend."
+                - !Sub ${HostedZone}
+          Type: 'A'
+          AliasTarget:
+            HostedZoneId:
+              - !GetAtt PortalELB.CanonicalHostedZoneNameID
+            DNSName:
+              - !GetAtt PortalELB.DNSName
