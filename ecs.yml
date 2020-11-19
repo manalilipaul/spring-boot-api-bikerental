@@ -45,7 +45,7 @@ Resources:
   PortalELB:
     Type: 'AWS::ElasticLoadBalancing::LoadBalancer'
     Properties:
-      Subnets: !Join [ ",", [ !Ref "SubnetID1", !Ref "SubnetID2" ]]
+      Subnets: !Split [',', !Join [ ",", [ !Ref "SubnetID1", !Ref "SubnetID2" ]]]
       Listeners:
         - LoadBalancerPort: '8080'
           InstancePort: '8080'
