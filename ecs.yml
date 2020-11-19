@@ -1,12 +1,15 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Parameters:
-  SubnetID1:
-    Type: String
+  SubnetID:
+    Type: 'List<AWS::EC2::Subnet::Id>'
+    Default: 'subnet-3528ed53, subnet-b8fe0bf0'
   ServiceName:
     Type: String
   ServiceVersion:
     Type: String
   DockerHubUsername:
+    Type: String
+  HostedZone:
     Type: String
 Resources:
   Cluster:
@@ -38,6 +41,22 @@ Resources:
       RequiresCompatibilities:
         - EC2
         - FARGATE
+  PortalELB:
+    Type: 'AWS::ElasticLoadBalancing::LoadBalancer'
+    Properties:
+      Subnets: !Ref SubnetID
+      Listeners:
+        - LoadBalancerPort: '8080'
+          InstancePort: '8080'
+          Protocol: HTTP
+      HealthCheck:
+        Target: 'HTTP:8080/rent'
+        HealthyThreshold: '3'
+        UnhealthyThreshold: '5'
+        Interval: '30'
+        Timeout: '5'
+      SecurityGroups:
+        - !GetAtt ServiceSecurityGroup.GroupId
   Service:
     Type: AWS::ECS::Service
     Properties:
@@ -49,7 +68,10 @@ Resources:
       NetworkConfiguration:
         AwsvpcConfiguration:
           AssignPublicIp: ENABLED
-          Subnets:
-            - !Ref SubnetID1
           SecurityGroups:
             - !GetAtt ServiceSecurityGroup.GroupId
+      LoadBalancers:
+        - ContainerName: portal-service
+          ContainerPort: 8080
+          LoadBalancerName:
+            Ref: PortalELB
