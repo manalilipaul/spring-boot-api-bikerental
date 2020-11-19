@@ -71,11 +71,11 @@ Resources:
           AssignPublicIp: ENABLED
           SecurityGroups:
             - !GetAtt ServiceSecurityGroup.GroupId
-    LoadBalancers:
-      - ContainerName: portal-service
-        ContainerPort: 8080
-        LoadBalancerName:
-          Ref: PortalELB
+      LoadBalancers:
+        - ContainerName: portal-service
+          ContainerPort: 8080
+          LoadBalancerName:
+            Ref: PortalELB
   Route53:
     Type: AWS::Route53::RecordSetGroup
     Properties:
