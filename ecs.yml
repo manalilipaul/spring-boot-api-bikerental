@@ -1,16 +1,12 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Parameters:
-  SubnetID1:
-    Type: String
-  SubnetID2:
+  SubnetID:
     Type: String
   ServiceName:
     Type: String
   ServiceVersion:
     Type: String
   DockerHubUsername:
-    Type: String
-  HostedZone:
     Type: String
 Resources:
   Cluster:
@@ -31,8 +27,8 @@ Resources:
     Type: AWS::ECS::TaskDefinition
     Properties:
       Family: !Sub ${ServiceName}-task
-      Cpu: 512
-      Memory: 1024
+      Cpu: 256
+      Memory: 512
       NetworkMode: awsvpc
       ContainerDefinitions:
         - Name: !Sub ${ServiceName}-container
@@ -42,27 +38,6 @@ Resources:
       RequiresCompatibilities:
         - EC2
         - FARGATE
-  LoadBalancer:
-    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
-    Properties:
-      Subnets: !Split [',', !Join [ ",", [ !Ref "SubnetID1", !Ref "SubnetID2" ]]]
-      SecurityGroups:
-        - !GetAtt ServiceSecurityGroup.GroupId
-  LoadBalancerListener:
-    Type: AWS::ElasticLoadBalancingV2::Listener
-    Properties:
-      LoadBalancerArn: !Ref LoadBalancer
-      Port: 8080
-      Protocol: HTTP
-      DefaultActions:
-        - Type: forward
-          TargetGroupArn: !Ref DefaultTargetGroup
-  DefaultTargetGroup:
-    Type: AWS::ElasticLoadBalancingV2::TargetGroup
-    Properties:
-      VpcId: !Ref VPC
-      Port: 8080
-      Protocol: HTTP
   Service:
     Type: AWS::ECS::Service
     Properties:
@@ -74,10 +49,7 @@ Resources:
       NetworkConfiguration:
         AwsvpcConfiguration:
           AssignPublicIp: ENABLED
+          Subnets:
+            - !Ref SubnetID
           SecurityGroups:
             - !GetAtt ServiceSecurityGroup.GroupId
-      LoadBalancers:
-        - ContainerName: portal-service
-          ContainerPort: 8080
-          LoadBalancerName:
-            Ref: PortalELB

@@ -34,7 +34,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.12'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-//    testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'org.springframework.security:spring-security-test'
 }
 
 test {
@@ -64,9 +64,7 @@ aws {
 cloudFormation {
     stackName "$project.name-stack"
     stackParams([
-            SubnetID1: findProperty('subnetId1') ?: '',
-            SubnetID2: findProperty('subnetId2') ?: '',
-            HostedZone: findProperty('hostzone') ?: '',
+            SubnetID: findProperty('subnetId') ?: '',
             ServiceName: project.name,
             ServiceVersion: project.version,
             DockerHubUsername: dockerHubUsernameProperty

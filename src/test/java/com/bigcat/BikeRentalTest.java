@@ -20,40 +20,31 @@ public class BikeRentalTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Test
-    public void getsAllRents() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/rent")
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
-    }
+//    Random rand = new Random();
+//
+//
+//    @Test
+//    public void signUp() throws Exception {
+//        String newStaff = "{\"username\":\"test_username"+rand_int1+"\",\"password\":\"test_password"+rand_int2+"\"}";
+//            mockMvc.perform(MockMvcRequestBuilders.post("/staff/sign-up")
+//                    .contentType(MediaType.APPLICATION_JSON)
+//                    .content(newStaff)
+//                    .accept(MediaType.APPLICATION_JSON))
+//                    .andExpect(status().isOk())
+//                    .andReturn();
+//    }
 
     @Test
-    public void getsSingleRent() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/rent/1")
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
-    }
-
-    @Test
-    public void returnsNotFoundForInvalidSingleRent() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/rent/10")
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound())
-                .andReturn();
-    }
-
-    @Test
-    public void addsNewRent() throws Exception {
-        String newRent = "{\"customername\":\"Cat\",\"checkout\":\"10/10/10\",\"checkin\":\"11/10/10\"}";
-        mockMvc.perform(MockMvcRequestBuilders.post("/rent")
+    public void login() throws Exception {
+        String newStaff = "{\"username\":\"test_username\",\"password\":\"test_password\"}";
+        mockMvc.perform(MockMvcRequestBuilders.get("/login")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(newRent)
+                .content(newStaff)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
     }
+
 
 }
 

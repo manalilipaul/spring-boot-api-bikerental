@@ -17,6 +17,11 @@ pipeline {
                 sh './gradlew assemble'
             }
         }
+        stage('Test') {
+            steps {
+                sh './gradlew test'
+            }
+        }
         stage('Build Docker image') {
             steps {
                 sh './gradlew docker --stacktrace'
@@ -37,7 +42,7 @@ pipeline {
             }
             steps {
                 withAWS(credentials: 'aws-credentials', region: env.AWS_REGION) {
-                    sh './gradlew awsCfnMigrateStack awsCfnWaitStackComplete -PsubnetId1=$SUBNET_ID1 -PsubnetId2=$SUBNET_ID2 -Phostzone=$HOSTZONE -PdockerHubUsername=$DOCKER_HUB_LOGIN_USR -Pregion=$AWS_REGION'
+                    sh './gradlew awsCfnMigrateStack awsCfnWaitStackComplete -PsubnetId=$SUBNET_ID -PdockerHubUsername=$DOCKER_HUB_LOGIN_USR -Pregion=$AWS_REGION'
                 }
             }
         }
