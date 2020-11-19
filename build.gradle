@@ -64,7 +64,8 @@ aws {
 cloudFormation {
     stackName "$project.name-stack"
     stackParams([
-            SubnetID: findProperty('subnetId') ?: '',
+            SubnetID1: findProperty('subnetId1') ?: '',
+            SubnetID2: findProperty('subnetId2') ?: '',
             ServiceName: project.name,
             ServiceVersion: project.version,
             DockerHubUsername: dockerHubUsernameProperty

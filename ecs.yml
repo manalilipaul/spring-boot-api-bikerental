@@ -1,6 +1,8 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Parameters:
-  SubnetID:
+  SubnetID1:
+    Type: String
+  SubnetID2:
     Type: String
   ServiceName:
     Type: String
