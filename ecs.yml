@@ -1,8 +1,9 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Parameters:
-  SubnetID:
-    Type: 'List<AWS::EC2::Subnet::Id>'
-    Default: 'subnet-3528ed53, subnet-b8fe0bf0'
+  SubnetID1:
+    Type: String
+  SubnetID2:
+    Type: String
   ServiceName:
     Type: String
   ServiceVersion:
@@ -44,7 +45,7 @@ Resources:
   PortalELB:
     Type: 'AWS::ElasticLoadBalancing::LoadBalancer'
     Properties:
-      Subnets: !Ref SubnetID
+      Subnets: !Join [ ",", [ !Ref "SubnetID1", !Ref "SubnetID2" ]]
       Listeners:
         - LoadBalancerPort: '8080'
           InstancePort: '8080'
