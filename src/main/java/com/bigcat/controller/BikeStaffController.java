@@ -4,41 +4,47 @@ import com.bigcat.entity.BikeStaff;
 import com.bigcat.repository.BikeStaffRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 
 @RestController
+@RequestMapping("/staff")
 public class BikeStaffController {
-    private final BikeStaffRepository bikeStaffRepository;
+    private BikeStaffRepository bikeStaffRepository;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public BikeStaffController(BikeStaffRepository bikeStaffRepository) {
+    public BikeStaffController(BikeStaffRepository bikeStaffRepository,  BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.bikeStaffRepository = bikeStaffRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-    @GetMapping(value = "/")
-    @ResponseBody
-    public String index(){
-        return "test";
+
+
+    @PostMapping(value ="/sign-up", produces = MediaType.APPLICATION_JSON_VALUE)
+    public BikeStaff signUp(@RequestBody BikeStaff bikeStaff) {
+        bikeStaff.setPassword(bCryptPasswordEncoder.encode(bikeStaff.getPassword()));
+        return bikeStaffRepository.save(bikeStaff);
     }
 
-    @GetMapping(value = "/staff", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
     public Iterable<BikeStaff> getStaff() {
         return bikeStaffRepository.findAll();
     }
 
-    @GetMapping(value = "/staff/{staffid}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{staffid}", produces = MediaType.APPLICATION_JSON_VALUE)
     public BikeStaff getStaff(@PathVariable long staffid){
         return bikeStaffRepository.findById(staffid).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Invalid staff id %s", staffid)));
     }
 
-    @PostMapping(value = "/staff", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public BikeStaff createStaff(@Valid @RequestBody BikeStaff bikeStaff) {
         return bikeStaffRepository.save(bikeStaff);
     }
 
-    @PutMapping(value = "/staff/{staffid}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{staffid}", produces = MediaType.APPLICATION_JSON_VALUE)
     public BikeStaff updateStaff(@RequestBody BikeStaff bikeStaffPut) {
         BikeStaff bikeStaff = bikeStaffRepository.findById(bikeStaffPut.getStaffid()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Invalid staff id %s", bikeStaffPut.getStaffid())));
         bikeStaff.setStaffname(bikeStaffPut.getStaffname());
@@ -47,7 +53,7 @@ public class BikeStaffController {
         return bikeStaff;
     }
 
-    @DeleteMapping(value = "/staff/{staffid}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/{staffid}", produces = MediaType.APPLICATION_JSON_VALUE)
     public BikeStaff deleteRent(@PathVariable long staffid) {
         BikeStaff bikeStaff = bikeStaffRepository.findById(staffid).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Invalid staff id %s", staffid)));
         bikeStaffRepository.delete(bikeStaff);

@@ -16,6 +16,7 @@ repositories {
     jcenter()
 }
 
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -24,8 +25,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-devtools'
     implementation group: 'com.h2database', name: 'h2', version: '1.4.200'
 
-    //implementation 'org.springframework.boot:spring-boot-starter-security'
-
+    implementation "org.springframework.boot:spring-boot-starter-security"
+    compile 'com.auth0:java-jwt:3.4.0'
 
     runtimeOnly 'mysql:mysql-connector-java'
 
@@ -33,7 +34,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.12'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    //testImplementation 'org.springframework.security:spring-security-test'
+//    testImplementation 'org.springframework.security:spring-security-test'
 }
 
 test {
@@ -55,8 +56,6 @@ dockerRun {
     ports '8080:8080'
     clean true
 }
-
-import com.amazonaws.services.cloudformation.model.Capability
 
 aws {
     region = findProperty('region') ?: 'ap-southeast-1'

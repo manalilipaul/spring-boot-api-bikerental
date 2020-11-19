@@ -3,11 +3,8 @@ package com.bigcat.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
-import java.sql.Date;
 
 @Entity
 @Getter
@@ -25,13 +22,18 @@ public class BikeStaff {
     @Column(name = "password", nullable = false, unique = true)
     private String password;
 
-    @NotEmpty
+
     private String staffname;
 
-    @NotEmpty
     private String staffrole;
 
+    public BikeStaff(String username, String password, String staffname, String staffrole) {
+        this.setUsername(username);
+            this.setPassword(password);
+        this.setStaffname(staffname);
+        this.setStaffrole(staffrole);
 
+    }
     public Long getStaffid() {
         return staffid;
     }
