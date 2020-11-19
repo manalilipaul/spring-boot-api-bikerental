@@ -42,22 +42,27 @@ Resources:
       RequiresCompatibilities:
         - EC2
         - FARGATE
-  PortalELB:
-    Type: 'AWS::ElasticLoadBalancing::LoadBalancer'
+  LoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
       Subnets: !Split [',', !Join [ ",", [ !Ref "SubnetID1", !Ref "SubnetID2" ]]]
-      Listeners:
-        - LoadBalancerPort: '8080'
-          InstancePort: '8080'
-          Protocol: HTTP
-      HealthCheck:
-        Target: 'HTTP:8080/rent'
-        HealthyThreshold: '3'
-        UnhealthyThreshold: '5'
-        Interval: '30'
-        Timeout: '5'
       SecurityGroups:
         - !GetAtt ServiceSecurityGroup.GroupId
+  LoadBalancerListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref LoadBalancer
+      Port: 8080
+      Protocol: HTTP
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref DefaultTargetGroup
+  DefaultTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      VpcId: !Ref VPC
+      Port: 8080
+      Protocol: HTTP
   Service:
     Type: AWS::ECS::Service
     Properties:
